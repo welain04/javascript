@@ -133,7 +133,7 @@ function answersCounter() {
                 } else {
                     inputAnswer.style.backgroundColor = "#f15b5b";
                 }
-                localStorage.clear();
+                //localStorage.clear();
                 //console.log(trueAnswer)
 
                 let bestResultInHistory = localStorage.getItem("result");
@@ -141,7 +141,7 @@ function answersCounter() {
                 if (trueAnswer > Number(bestResultInHistory)) {
                     localStorage.setItem('result', String(trueAnswer));
                 }
-                console.log(Number(bestResultInHistory))
+                //console.log(Number(bestResultInHistory))
                 const bestResult = document.getElementById('better-result');
                 if (bestResultInHistory === null) {
                     bestResult.style.display = "none";
