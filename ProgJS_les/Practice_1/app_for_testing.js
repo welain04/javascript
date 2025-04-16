@@ -133,12 +133,21 @@ function answersCounter() {
                 } else {
                     inputAnswer.style.backgroundColor = "#f15b5b";
                 }
-                //localStorage.clear();
+                localStorage.clear();
+                //console.log(trueAnswer)
+
                 let bestResultInHistory = localStorage.getItem("result");
+                
                 if (trueAnswer > Number(bestResultInHistory)) {
                     localStorage.setItem('result', String(trueAnswer));
                 }
-                console.log(bestResultInHistory)
+                console.log(Number(bestResultInHistory))
+                const bestResult = document.getElementById('better-result');
+                if (bestResultInHistory === null) {
+                    bestResult.style.display = "none";
+                } else {
+                    bestResult.innerHTML = `<br/>Ваш лучший результат: ${bestResultInHistory} из 7`;
+                } 
 
                 setTimeout(() => { // таймер, чтобы можно было увидеть цвет выбр. ответа и переключился новый
                     nowQuastion.style.display = "none";
@@ -149,10 +158,7 @@ function answersCounter() {
                     const counterOfCorrectAnswers = document.getElementById('counter-of-correct-answers')
                     counterOfCorrectAnswers.textContent = `ВАШ РЕЗУЛЬТАТ: ${trueAnswer} из 7`;
                     const counterPercent = document.getElementById('percentage-counter');
-                    counterPercent.textContent = `Вы кринжулик на ${Math.round(trueAnswer * 100 / 7)}%`;
-                  
-                    const bestResult = document.getElementById('better-result');
-                    bestResult.innerHTML = `<br/>Ваш лучший результат: ${bestResultInHistory} из 7`;
+                    counterPercent.textContent = `Вы кринжулик на ${Math.round(trueAnswer * 100 / 7)}%`;  
 
                 }, 500)
 
