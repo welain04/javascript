@@ -123,42 +123,42 @@ function answersCounter() {
             inputAnswer.addEventListener('input', function (eventInput) { //записываем в переменную последнее введенное значение вполе ввода
                 valueEnd = eventInput.target.value;
             });
-            
+
             if (event.target.closest('BUTTON')) { //при нажатии на кнопку выполняется проверка введенного текста
-                
 
                 if (valueEnd.toLowerCase() === answer) {
                     inputAnswer.style.backgroundColor = "#3ccc3c";
-                    trueAnswer++ 
+                    trueAnswer++
                 } else {
                     inputAnswer.style.backgroundColor = "#f15b5b";
                 }
                 //localStorage.clear();
-                //console.log(trueAnswer)
 
-                let bestResultInHistory = localStorage.getItem("result");
-                
-                if (trueAnswer > Number(bestResultInHistory)) {
-                    localStorage.setItem('result', String(trueAnswer));
+                let bestResultText = document.getElementById('better-result-text');
+                let bestResultInHistory = localStorage.getItem('result');
+
+                function proccessBestResult() {
+                    if (!bestResultInHistory) {                    
+                        localStorage.setItem('result', String(trueAnswer));                    
+                        
+                    } else if (trueAnswer > Number(bestResultInHistory)) {
+                        localStorage.setItem('result', String(trueAnswer));    
+                    }                              
+                    bestResultInHistory = localStorage.getItem('result');  
                 }
-                //console.log(Number(bestResultInHistory))
-                const bestResult = document.getElementById('better-result');
-                if (bestResultInHistory === null) {
-                    bestResult.style.display = "none";
-                } else {
-                    bestResult.innerHTML = `<br/>Ваш лучший результат: ${bestResultInHistory} из 7`;
-                } 
+                proccessBestResult()
 
                 setTimeout(() => { // таймер, чтобы можно было увидеть цвет выбр. ответа и переключился новый
                     nowQuastion.style.display = "none";
                     clickOnRunningButton.style.display = "flex";
                     clickOnRunningButton.textContent = 'Начать тест заново';
                     resultTest.style.display = "flex";
-                  
+
                     const counterOfCorrectAnswers = document.getElementById('counter-of-correct-answers')
                     counterOfCorrectAnswers.textContent = `ВАШ РЕЗУЛЬТАТ: ${trueAnswer} из 7`;
                     const counterPercent = document.getElementById('percentage-counter');
-                    counterPercent.textContent = `Вы кринжулик на ${Math.round(trueAnswer * 100 / 7)}%`;  
+                    counterPercent.textContent = `Вы кринжулик на ${Math.round(trueAnswer * 100 / 7)}%`;
+                    bestResultText.innerHTML = `<br/>Ваш лучший результат: ${bestResultInHistory} из 7`;
 
                 }, 500)
 
