@@ -1,0 +1,357 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+@font-face {
+    font-family: "Colus-Regular";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Colus-Regular"),
+        url("/ProgJS_les/Practice_2_RPG/fonts/colus-Regular.woff") format("woff");
+}
+
+body {
+    padding: 50px 15px 50px 20px;
+    color: rgb(56, 53, 53);
+    background-image: url(image/basic_backgroung.png);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 40px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 5px 7px;
+    width: 100%;
+    font-family: "Colus-Regular", "Arial", sans-serif;
+    font-size: 11px;
+    color: #c2c088;
+}
+
+.border-window{
+    display: flex;
+    background-image: url(image/stone_slab_400x1600.png);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 7px 7px;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    background-color: rgba(243, 245, 244, 0.927);
+    max-width: 350px;
+    width: 100%;
+    font-family: "Colus-Regular", "Arial", sans-serif;
+    border-radius: 6px;
+}
+
+.container-window-use-item .border-window {
+    top: 190px;
+}
+
+.container-window-use-item .window-use-item,
+.container-window-win .window-win,
+.container-window-loss-of-progress .window-loss-of-progress {
+    padding: 5px;    
+    border-radius: 6px;
+    width: 100%;
+    background-image: url(image/modal_windiws.png);    
+    align-items: center;
+}
+
+.container-window-use-item .border-window .window-use-item{
+    display: flex;
+    flex-direction: column;
+}
+
+.container-window-use-item .window-use-item .title,
+.container-window-win .window-win .title,
+.container-window-loss-of-progress .window-loss-of-progress .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    color: #f4ec9c;
+}
+
+.container-window-use-item .window-use-item .button-place,
+.container-window-win .window-win .button-place-win {
+    display: flex;
+    flex-direction: column;    
+    margin-top: 3px;
+    gap: 3px;
+    width: 100%;
+    height: 100%;
+}
+
+.container-window-use-item .window-use-item .button-place {
+    min-height: 65px;
+    max-width: 200px;
+}
+
+.container-window-use-item .window-use-item .button-place .button {
+    background-image: url(picture/button_item.png);
+    min-height: 30px;
+    color: #f4ec9c;
+}
+
+.container-window-use-item .window-use-item .button-exit-from-the-bag {
+    margin-top: 10px;
+    background-image: url(picture/button_get_out_of_the_bag.png);
+    max-width: 200px;
+    min-height: 30px;
+    color: #f4ec9c;
+}
+
+.container-window-win .border-window {
+    top: 216px;
+}
+
+.container-window-win .border-window .window-win{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.container-window-win .window-win .title {
+    font-size: 35px;
+}
+
+.container-window-win .window-win .text-win {
+    font-size: 15px;
+    text-align: center;
+    color: #eeede1;
+    padding: 2px;
+}
+
+.container-window-win .window-win .button.button-replay,
+.window-game .game-area .location .location-selection .button.button-replay {
+    margin-bottom: 5px;
+    background-image: url(picture/button_replay.png);
+    font-size: 20px;
+    color: #f4ec9c;
+    max-width: 326px;
+    min-height: 40px;
+    border-radius: 5px;
+}
+
+.container-window-loss-of-progress,
+.container-window-use-item,
+.container-window-win {
+    position: fixed;
+    display: flex;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+}
+
+.container-window-loss-of-progress .border-window  {
+    max-width: 250px;
+    top: 158px;
+}
+
+.container-window-loss-of-progress .window-loss-of-progress .title {
+    flex-direction: column;
+    gap: 3px;
+}
+
+.container-window-loss-of-progress .window-loss-of-progress .button-place-loss-of-progress {
+    display: flex;
+    margin-top: 4px;
+    gap: 4px;
+    width: 100%;
+    top: 50px;
+    justify-content: center;
+}
+
+.container-window-loss-of-progress .window-loss-of-progress .button-place-loss-of-progress .button-loss-of-progress-yes {  
+    background-image: url(picture/button_yes.png);
+    max-width: 100px;
+    min-height: 30px;
+    color: #f4ec9c;
+}
+
+.container-window-loss-of-progress .window-loss-of-progress .button-place-loss-of-progress .button-loss-of-progress-no {
+    background-image: url(picture/button_no.png);
+    max-width: 100px;
+    min-height: 30px;    
+    color: #f4ec9c;
+}
+
+.window-game {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 400px;
+    width: 100%;
+    background-image: url(image/stone_slab_400x1600.png);
+    box-shadow: 1px 1px 2px rgb(55, 55, 55);
+    font-family: "Colus-Regular", "Arial", sans-serif;
+}
+
+.window-game .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.window-game .title .game-name img {
+    max-width: 380px;
+}
+
+.window-game .game-area {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.window-game .game-area .person {
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+.window-game .game-area .person .person-characteristics,
+.window-game .game-area .location,
+.window-game .game-area .event-log {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.window-game .game-area .person .person-characteristics {
+    gap: 2px;
+    background-image: url(image/text_area.png);
+}
+
+.window-game .game-area .person .person-characteristics .button-person-characteristics {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.window-game .game-area .person .person-characteristics .button-person-characteristics .button {
+    display: flex;
+    gap: 3px;
+    font-size: 9px;
+    padding: 3px 3px 6px 3px;
+    color: #f4ec9c;
+    align-items: center;
+    background-image: url(picture/button_person_change.png);
+    max-height: 21px;
+    justify-content: center;
+}
+
+.window-game .game-area .person .person-characteristics .button .icon-person-change {
+    max-width: 15px;
+}
+
+
+.window-game .game-area .person .person-characteristics .button .icon-person-replay {
+    max-width: 15px;
+}
+
+.window-game .game-area .person .person-characteristics .characteristic {
+    font-size: 12px;
+    color: #eeede1;
+}
+
+.window-game .game-area .person .person-actions,
+.window-game .game-area .location .location-selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.window-game .game-area .person .person-actions {
+    max-width: 100px;
+    gap: 3px;
+}
+
+.window-game .game-area .person .person-actions .button-game {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: center;
+    max-width: 100px;
+}
+
+.window-game .game-area .person .person-actions .button-game .button {
+    background-color: rgb(54, 164, 29);
+}
+
+.window-game .game-area .person .person-actions .button-game .button-action-attack {
+    background-image: url(picture/button_attack.png);
+    min-height: 30px;
+}
+
+.window-game .game-area .person .person-actions .button-game .button-use-item {
+    background-image: url(picture/button_use_item.png);
+    min-height: 45px;
+    max-width: 100px;
+}
+
+.window-game .game-area .person .person-actions .button-action-come-back {
+    background-image: url(picture/button_come_back.png);
+    min-height: 45px;
+}
+
+.window-game .game-area .location .location-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: #f4ec9c;
+    font-size: 17px;
+}
+
+.window-game .game-area .location .location-selection .button {
+    background-image: url(picture/button_location.png);
+    max-width: 300px;
+    min-height: 30px;
+    margin-top: 3px;
+}
+
+.window-game .game-area .location .location-selection .button .button-replay {
+    margin-bottom: 5px;
+    background-color: rgb(240, 209, 3);
+    font-size: 20px;
+}
+
+.window-game .game-area .event-log {
+    min-height: 110px;
+    background-image: url(image/text_area.png);
+}
+
+.window-game .game-area .event-log .journal-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: #eeede1;
+    line-height: 13px;
+}

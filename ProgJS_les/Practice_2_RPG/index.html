@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Текстовая RPG Игра</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <main>
+        <div id="container-window-use-item" class="container-window-use-item">
+            <div class="border-window">
+                <div class="window-use-item">
+                    <div class="title">ВЫБЕРИ ПРЕДМЕТ:</div>
+                    <div id="button-place" class="button-place"></div>
+                    <button id="button-exit-from-the-bag" class="button button-exit-from-the-bag">
+                        Выйти из сумки
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="container-window-win" class="container-window-win">
+            <div class="border-window">
+                <div class="window-win">
+                    <div class="title">👑 ПОБЕДА! 🔑</div>
+                    <div class="text-win">
+                        Город освобожден! Теперь ты станешь правителем этого города, а золото, украденное
+                        драконом,
+                        снова может вернуться в город или нет?...
+                    </div>
+                    <button class="button button-replay" id="button-replay-win">НАЧАТЬ ЗАНОВО</button>
+                </div>
+            </div>
+        </div>
+        <div id="container-window-loss-of-progress" class="container-window-loss-of-progress">
+            <div class="border-window">
+                <div class="window-loss-of-progress">
+                    <div class="title">
+                        <div class="message">Прогресс игры будет потерян</div>
+                        <div class="question-text">Продолжить?</div>
+                    </div>
+                    <div id="button-place-loss-of-progress" class="button-place-loss-of-progress">
+                        <button id="loss-of-progress-yes" class="button button-loss-of-progress-yes">
+                            Да
+                        </button>
+                        <button id="loss-of-progress-no" class="button button-loss-of-progress-no">
+                            Нет
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window-game">
+            <div class="title">
+                <div class="game-name">
+                    <img src="picture/the_elder_stones.png" alt="The Elder Stones">
+                </div>
+            </div>
+            <div class="game-area">
+                <div class="person">
+                    <div class="person-characteristics">
+                        <div class="button-person-characteristics">
+                            <button id="button-person-change" class="button button-person-change">
+                                <img class="icon-person-change" src="/ProgJS_les/Practice_2_RPG/icon/icon_update.png"
+                                    alt="Смена персонажа">
+                                НОВЫЙ ПЕРСОНАЖ
+                            </button>
+                            <button id="button-person-replay" class="button button-person-replay">
+                                <img class="icon-person-replay" src="/ProgJS_les/Practice_2_RPG/icon/icon_reply.png"
+                                    alt="Начать заново">
+                                НАЧАТЬ ЗАНОВО
+                            </button>
+                        </div>
+                        <div id="person-name" class="characteristic characteristic-1">Имя героя:</div>
+                        <div id="person-race" class="characteristic characteristic-2">Раса:</div>
+                        <div id="person-hp" class="characteristic characteristic-3">Здоровье:</div>
+                        <div id="person-strength" class="characteristic characteristic-4">Сила:</div>
+                        <div id="person-agility" class="characteristic characteristic-5">Ловкость:</div>
+                        <div id="person-defense" class="characteristic characteristic-6">Броня:</div>
+                        <div id="person-items" class="characteristic characteristic-7">Предметы:</div>
+                    </div>
+                    <div class="person-actions">
+                        <div class="button-game">
+                            <button id="button-attack" class="button button-action-attack">АТАКОВАТЬ</button>
+                            <button id="button-use-item" class="button button-use-item">Использовать предмет</button>
+                        </div>
+                        <button id="button-come-back" class="button button-action-come-back">Вернуться назад</button>
+                    </div>
+                </div>
+                <div class="location">
+                    <div class="location-title">
+                        <span id="name-of-the-current-location" class="location-name">Текущая локация: Холм</span>
+                    </div>
+                    <div id="location-selection" class="location-selection">
+                        <button class="button button-replay" id="button-replay">НАЧАТЬ ЗАНОВО</button>
+
+                        <button id="location-ditch" class="button button-location-hill">Ров</button>
+                        <button id="location-yard" class="button button-location-hill">Двор</button>
+                        <button id="location-gates" class="button button-location-hill">Ворота замка</button>
+
+                        <button id="location-barn" class="button button-location-yard">Амбар</button>
+                        <button id="location-stable" class="button button-location-yard">Конюшня</button>
+
+                        <button id="location-doctor" class="button button-location-gates location-gates">Лекарь</button>
+                        <button id="location-weapons"
+                            class="button button-location-gates location-gates">Камерная</button>
+                        <button id="location-staircase"
+                            class="button button-location-gates location-gates">Лестница</button>
+
+                        <button id="location-bedroom"
+                            class="button button-location-gates location-staircase-rooms">Спальня</button>
+                        <button id="location-throne-room"
+                            class="button button-location-gates location-staircase-rooms">Тронный зал</button>
+
+                        <button id="location-donjon" class="button button-location-gates location-throne-room">Главная
+                            башня</button>
+
+                        <button id="bedroom-box" class="button button-location-gates button-bedroom-box">Открыть
+                            сундук</button>
+                    </div>
+                </div>
+                <div class="event-log">
+                    <div id="journal-entries" class="journal-entries">
+                        <span id="start-text" class="start-text">Преветсвую, странник! Готов начать свой путь?</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="RPG_game.js"></script>
+</body>
+
+</html>
