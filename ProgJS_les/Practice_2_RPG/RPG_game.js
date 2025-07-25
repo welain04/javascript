@@ -266,7 +266,7 @@ function mainGame() {
             nameEnemy: 'Болотная жаба',
             maxHpEnemy: 20,
             hpEnemy: 20,
-            strengthEnemy: 10,
+            strengthEnemy: 15,
             status: 'undefeated',
             bonusWin() { return changeConstantlyDefense(1) },
             bonusItem() {
@@ -285,8 +285,8 @@ function mainGame() {
         },
         {
             nameEnemy: 'Дворовая сумасшедсшая',
-            maxHpEnemy: 30,
-            hpEnemy: 30,
+            maxHpEnemy: 40,
+            hpEnemy: 40,
             strengthEnemy: 15,
             status: 'undefeated',
             bonusWin() { return changeConstantlyAgility(3) },
@@ -336,8 +336,8 @@ function mainGame() {
         },
         {
             nameEnemy: 'Орк-охранник',
-            maxHpEnemy: 60,
-            hpEnemy: 60,
+            maxHpEnemy: 70,
+            hpEnemy: 70,
             strengthEnemy: 25,
             status: 'undefeated',
             bonusWin() { return changeConstantlyStrength(3) },
@@ -372,8 +372,8 @@ function mainGame() {
         },
         {
             nameEnemy: 'Дракон',
-            maxHpEnemy: 90,
-            hpEnemy: 90,
+            maxHpEnemy: 120,
+            hpEnemy: 120,
             strengthEnemy: 20, 
             status: 'undefeated',
             bonusWin() { return },
