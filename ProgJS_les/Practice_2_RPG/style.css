@@ -63,7 +63,7 @@ main {
 }
 
 .container-window-use-item .window-use-item,
-.container-window-win .window-win,
+.container-victory-window .victory-window,
 .container-window-loss-of-progress .window-loss-of-progress {
     padding: 5px;    
     border-radius: 6px;
@@ -78,7 +78,7 @@ main {
 }
 
 .container-window-use-item .window-use-item .title,
-.container-window-win .window-win .title,
+.container-victory-window .victory-window .title,
 .container-window-loss-of-progress .window-loss-of-progress .title {
     display: flex;
     align-items: center;
@@ -89,7 +89,7 @@ main {
 }
 
 .container-window-use-item .window-use-item .button-place,
-.container-window-win .window-win .button-place-win {
+.container-victory-window .victory-window .button-place-win {
     display: flex;
     flex-direction: column;    
     margin-top: 3px;
@@ -117,28 +117,28 @@ main {
     color: #f4ec9c;
 }
 
-.container-window-win .border-window {
+.container-victory-window .border-window {
     top: 216px;
 }
 
-.container-window-win .border-window .window-win{
+.container-victory-window .border-window .victory-window{
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.container-window-win .window-win .title {
+.container-victory-window .victory-window .title {
     font-size: 35px;
 }
 
-.container-window-win .window-win .text-win {
+.container-victory-window .victory-window .text-win {
     font-size: 15px;
     text-align: center;
     color: #eeede1;
     padding: 2px;
 }
 
-.container-window-win .window-win .button.button-replay,
+.container-victory-window .victory-window .button.button-replay,
 .window-game .game-area .location .location-selection .button.button-replay {
     margin-bottom: 5px;
     background-image: url(picture/button_replay.png);
@@ -151,7 +151,7 @@ main {
 
 .container-window-loss-of-progress,
 .container-window-use-item,
-.container-window-win {
+.container-victory-window {
     position: fixed;
     display: flex;
     z-index: 1;
