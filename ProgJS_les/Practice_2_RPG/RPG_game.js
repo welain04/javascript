@@ -145,8 +145,6 @@ function getNameItem(findName) { //поиск объектов массива п
         if (gameState.player.gameItemPerson[index].itemName === findName) {
             gameState.player.numberItemInArr = index
             return
-        } else {
-            gameState.player.numberItemInArr = 'Не найден'
         }
     }
 }
@@ -279,7 +277,7 @@ function mainGame() {
             winText() {
                 addLog(`🔊 Я ОТПРАВЛЮСЬ В ЖАБИЙ РАЙ, А ТВОЙ ПУТЬ ТОЛЬКО НАЧАЛСЯ! 🔊`)
             },
-            attack: clickOnButtonAttack(0, 1, 1)
+            attack: clickOnButtonAttack(0, true, true)
         },
         {
             nameEnemy: 'Дворовая сумасшедсшая',
@@ -292,7 +290,7 @@ function mainGame() {
             winText() {
                 addLog(`🔊 Кххх...ВЕЛИКИЕ ДЕЛА - ВЕЛИКИЕ СТРАДАНИЯ, ${gameState.player.startCharacteristics.personName} ... Кххх... 🔊`);
             },
-            attack: clickOnButtonAttack(1, 1, 0)
+            attack: clickOnButtonAttack(1, true, false)
         },
         {
             nameEnemy: 'Гоблин-конюх',
@@ -305,7 +303,7 @@ function mainGame() {
             winText() {
                 addLog(`🔊 КОРМИ МОИХ ЛОШАДЕЙ БЕЗГЛЮТЕНОВЫМ ЗЕРНОМ 2 РАЗА В ДЕНЬ! 🔊`);
             },
-            attack: clickOnButtonAttack(2, 1, 0)
+            attack: clickOnButtonAttack(2, true, false)
         },
         {
             nameEnemy: 'Амбарная крыса',
@@ -324,7 +322,7 @@ function mainGame() {
             winText() {
                 addLog(`🔊 МЫ НЕ ВЕШАЕМСЯ В ХОЛОДИЛЬНИКЕ БЕЗ ПРИЧИНЫ! 🔊`);
             },
-            attack: clickOnButtonAttack(3, 1, 1)
+            attack: clickOnButtonAttack(3, true, true)
         },
         {
             nameEnemy: 'Орк-охранник',
@@ -343,7 +341,7 @@ function mainGame() {
             winText() {
                 addLog(`🔊 КАК БЫ НИ БЛИСТЕЛИ ТВОИ ДОСПЕХИ, ТЫ ПРОСТО ОБЫЧНЫЙ ВОР! 🔊`);
             },
-            attack: clickOnButtonAttack(4, 1, 1)
+            attack: clickOnButtonAttack(4, true, true)
         },
         {
             nameEnemy: 'Трехглавая собака',
@@ -356,7 +354,7 @@ function mainGame() {
             winText() {
                 addLog(`🔊 ВАВ...ВАв...вав...Иии...иии... 🔊`);
             },
-            attack: clickOnButtonAttack(5, 1, 0)
+            attack: clickOnButtonAttack(5, true, false)
         },
         {
             nameEnemy: 'Дракон',
@@ -376,7 +374,7 @@ function mainGame() {
                 gameState.navigation.buttonReplayOnVictoryWindow.removeEventListener('click', mouseClickOnbuttonReplayOnVictoryWindow);
                 gameState.navigation.buttonReplayOnVictoryWindow.addEventListener('click', mouseClickOnbuttonReplayOnVictoryWindow);
             },
-            attack: clickOnButtonAttack(6, 1, 0)
+            attack: clickOnButtonAttack(6, true, false)
         }
     ]
 
@@ -493,25 +491,27 @@ function mainGame() {
         gameState.navigation.buttonReplay.addEventListener('click', mouseClickOnButtonReplay);
     }
 
-    function clickOnButtonLossOfProgressNo() {//кнопка несогласия перезапустить игру заново
-        function mouseClickOnButtonLossOfProgressNo(event) {
-            gameState.navigation.containerWindowLossOfProgress.style.display = "none";
-        }
+    function mouseClickOnButtonLossOfProgressNo(event) {
+        gameState.navigation.containerWindowLossOfProgress.style.display = "none";
+    }
+
+    function clickOnButtonLossOfProgressNo() {
         gameState.navigation.buttonLossOfProgressNo.removeEventListener('click', mouseClickOnButtonLossOfProgressNo);
         gameState.navigation.buttonLossOfProgressNo.addEventListener('click', mouseClickOnButtonLossOfProgressNo);
     }
     clickOnButtonLossOfProgressNo()
 
+    function mouseClickOnButtonLossOfProgressYesPersonChange(event) {
+        gameState.player.gameItemPerson = []
+        resetProgress()
+        setAllCharacteristics()
+        gameState.navigation.containerWindowLossOfProgress.style.display = "none";
+    }
+
     function clickOnButtonPersonChange() {//кнопка изменения персонажа
         function mouseClickOnButtonPersonChange(event) {
             gameState.navigation.containerWindowLossOfProgress.style.display = "flex";
 
-            function mouseClickOnButtonLossOfProgressYesPersonChange(event) {
-                gameState.player.gameItemPerson = []
-                resetProgress()
-                setAllCharacteristics()
-                gameState.navigation.containerWindowLossOfProgress.style.display = "none";
-            }
             gameState.navigation.buttonLossOfProgressYes.removeEventListener('click', mouseClickOnButtonLossOfProgressYesPersonChange, { once: true });
             gameState.navigation.buttonLossOfProgressYes.addEventListener('click', mouseClickOnButtonLossOfProgressYesPersonChange, { once: true });
         }
@@ -520,14 +520,16 @@ function mainGame() {
     }
     clickOnButtonPersonChange()
 
+    function mouseClickOnbuttonLossOfProgressYesPersonReplay(event) {
+        resetProgress()
+        setStartCharacteristics()
+        gameState.navigation.containerWindowLossOfProgress.style.display = "none";
+    }
+
     function clickOnButtonPersonReplay() {//кнопка начать заново (в любой момент игры) с модальным окном
         function mouseClickOnButtonPersonReplay(event) {
             gameState.navigation.containerWindowLossOfProgress.style.display = "flex";
-            function mouseClickOnbuttonLossOfProgressYesPersonReplay(event) {
-                resetProgress()
-                setStartCharacteristics()
-                gameState.navigation.containerWindowLossOfProgress.style.display = "none";
-            }
+
             gameState.navigation.buttonLossOfProgressYes.removeEventListener('click', mouseClickOnbuttonLossOfProgressYesPersonReplay, { once: true });
             gameState.navigation.buttonLossOfProgressYes.addEventListener('click', mouseClickOnbuttonLossOfProgressYesPersonReplay, { once: true });
         }
@@ -554,57 +556,62 @@ function mainGame() {
     }
     clickOnButtonUseItem()
 
-    function clickOnButtonComeBack() {// кнопка "вернуться назад"
-        function mouseClickOnButtonComeBack(event) {
-            switch (gameState.player.presentLocation) {
-                case 'Холм':
-                    onOffButtons(gameState.navigation.locationButtonsHill, 1);
-                    onOffButtons(gameState.navigation.locationButtonsBranchGates, 0)
-                    onOffButtons(gameState.navigation.locationButtonsBranchYard, 0)
-                    break
-                case 'Ров':
-                case 'Ворота замка':
-                case 'Двор':
-                    onOffButtons(gameState.navigation.locationButtonsHill, 1);
-                    onOffButtons(gameState.navigation.locationButtonsBranchYard, 0);
-                    onOffButtons(gameState.navigation.locationButtonsGates, 0);
-                    gameState.player.presentLocation = 'Холм';
-                    break
-                case 'Амбар':
-                case 'Конюшня':
-                    onOffButtons(gameState.navigation.locationButtonsBranchYard, 1);
-                    onOffButtons(gameState.navigation.locationButtonsHill, 0);
-                    gameState.player.presentLocation = 'Двор';
-                    break
-                case 'Лекарь':
-                case 'Камерная':
-                case 'Лестница':
-                    onOffButtons(gameState.navigation.locationButtonsGates, 1);
-                    onOffButtons(gameState.navigation.locationButtonsHill, 0);
-                    onOffButtons(gameState.navigation.locationButtonsStaircase, 0);
-                    gameState.player.presentLocation = 'Ворота замка';
-                    break
-                case 'Спальня':
-                case 'Тронный зал':
-                    gameState.navigation.buttonBedroomBox.style.display = "none";
-                    gameState.navigation.buttonDonjon.style.display = "none";
-                    onOffButtons(gameState.navigation.locationButtonsStaircase, 1);
-                    onOffButtons(gameState.navigation.locationButtonsHill, 0);
-                    onOffButtons(gameState.navigation.locationButtonsGates, 0);
-                    gameState.player.presentLocation = 'Лестница';
-                    break
-                case 'Главная башня':
-                    gameState.navigation.buttonDonjon.style.display = "flex";
-                    onOffButtons(gameState.navigation.locationButtonsHill, 0);
-                    onOffButtons(gameState.navigation.locationButtonsGates, 0);
-                    onOffButtons(gameState.navigation.locationButtonsStaircase, 0);
-                    gameState.player.presentLocation = 'Тронный зал';
-                    break
-            }
-            gameState.navigation.nameCurrentLocation.textContent = `Текущая локация: ${gameState.player.presentLocation}`;
-            gameState.navigation.journalEntries.innerHTML = `Продолжай свой путь`
-            setIsUnderAttackNull()
+    function mouseClickOnButtonComeBack(event) {
+        for (let index = 0; index <= (arrayOfEnemies.length - 1); index++) {
+            arrayOfEnemies[index].hpEnemy = arrayOfEnemies[index].maxHpEnemy
         }
+
+        switch (gameState.player.presentLocation) {
+            case 'Холм':
+                onOffButtons(gameState.navigation.locationButtonsHill, 1);
+                onOffButtons(gameState.navigation.locationButtonsBranchGates, 0)
+                onOffButtons(gameState.navigation.locationButtonsBranchYard, 0)
+                break
+            case 'Ров':
+            case 'Ворота замка':
+            case 'Двор':
+                onOffButtons(gameState.navigation.locationButtonsHill, 1);
+                onOffButtons(gameState.navigation.locationButtonsBranchYard, 0);
+                onOffButtons(gameState.navigation.locationButtonsGates, 0);
+                gameState.player.presentLocation = 'Холм';
+                break
+            case 'Амбар':
+            case 'Конюшня':
+                onOffButtons(gameState.navigation.locationButtonsBranchYard, 1);
+                onOffButtons(gameState.navigation.locationButtonsHill, 0);
+                gameState.player.presentLocation = 'Двор';
+                break
+            case 'Лекарь':
+            case 'Камерная':
+            case 'Лестница':
+                onOffButtons(gameState.navigation.locationButtonsGates, 1);
+                onOffButtons(gameState.navigation.locationButtonsHill, 0);
+                onOffButtons(gameState.navigation.locationButtonsStaircase, 0);
+                gameState.player.presentLocation = 'Ворота замка';
+                break
+            case 'Спальня':
+            case 'Тронный зал':
+                gameState.navigation.buttonBedroomBox.style.display = "none";
+                gameState.navigation.buttonDonjon.style.display = "none";
+                onOffButtons(gameState.navigation.locationButtonsStaircase, 1);
+                onOffButtons(gameState.navigation.locationButtonsHill, 0);
+                onOffButtons(gameState.navigation.locationButtonsGates, 0);
+                gameState.player.presentLocation = 'Лестница';
+                break
+            case 'Главная башня':
+                gameState.navigation.buttonDonjon.style.display = "flex";
+                onOffButtons(gameState.navigation.locationButtonsHill, 0);
+                onOffButtons(gameState.navigation.locationButtonsGates, 0);
+                onOffButtons(gameState.navigation.locationButtonsStaircase, 0);
+                gameState.player.presentLocation = 'Тронный зал';
+                break
+        }
+        gameState.navigation.nameCurrentLocation.textContent = `Текущая локация: ${gameState.player.presentLocation}`;
+        gameState.navigation.journalEntries.innerHTML = `Продолжай свой путь`
+        setIsUnderAttackNull()
+    }
+
+    function clickOnButtonComeBack() {// кнопка "вернуться назад"
 
         gameState.navigation.buttonComeBack.removeEventListener('click', mouseClickOnButtonComeBack);
         gameState.navigation.buttonComeBack.addEventListener('click', mouseClickOnButtonComeBack);
@@ -713,69 +720,72 @@ function mainGame() {
         }
     }
 
-    function clickOnButtonAttack(numberEnemy, bonusWin, bonusItem) {//кнопка атаки и получения бонусов
-        function mouseClickOnButtonAttack(event) {
-            if (arrayOfEnemies[numberEnemy].isUnderAttack === 1) {
-                if (arrayOfEnemies[numberEnemy].status === 'Побежденный') {
+    function attackEnemy(enemyIndex, bonusWin, bonusItem) { // атака и получение бонусов
+        let newState = {}; // копируем, чтобы не мутировать напрямую
+        newState.enemies = { ...arrayOfEnemies };
+        newState.player = { ...gameState.player };
+        const events = [];
+        const enemy = newState.enemies[enemyIndex];
+        const player = newState.player;
 
-                    addLog(`**Все враги в локации побеждены!**`)
-                } else {
+        if (enemy.status === 'Побежденный') {
+            events.push('Все враги в локации побеждены!');
+            return { newState, events };
+        }
 
-                    let maxHpEnemy = arrayOfEnemies[numberEnemy].maxHpEnemy;
-                    let strengthEnemy = arrayOfEnemies[numberEnemy].strengthEnemy;
+        // Урон по врагу
+        const damageToEnemy = player.valueStrength + getRandomIntInclusive(0, player.valueAgility);
+        enemy.hpEnemy = Math.max(enemy.hpEnemy - damageToEnemy, 0);
+        events.push(`${enemy.nameEnemy} получил -${damageToEnemy} HP (HP: ${enemy.hpEnemy}/${enemy.maxHpEnemy})`);
 
-                    let damageToEnemy = gameState.player.valueStrength + getRandomIntInclusive(0, gameState.player.valueAgility);
-                    let newValueHpEnemy = gameState.player.lastValueHpEnemy - damageToEnemy;
 
-                    // Урон по персонажу
-                    let damageToPerson = strengthEnemy - gameState.player.valueDefense - getRandomIntInclusive(0, gameState.player.valueAgility);
-                    if (damageToPerson < 0) {
-                        damageToPerson = 0;
-                    }
+        // Урон по игроку
+        const damageToPlayer = Math.max(
+            enemy.strengthEnemy - player.valueDefense - getRandomIntInclusive(0, player.valueAgility),
+            0
+        );
+        player.lastValueHp = Math.max(player.lastValueHp - damageToPlayer, 0);
+        events.push(`Ты получаешь -${damageToPlayer} HP`);
 
-                    let newValueHp = gameState.player.lastValueHp - damageToPerson
-                    gameState.player.lastValueHp = newValueHp
 
-                    if (gameState.player.lastValueHp <= 0) {
-                        gameState.player.lastValueHp = 0
+        // Проверка смерти игрока
+        if (player.lastValueHp === 0) {
+            events.push('***ТЫ УМЕР В БОЮ*** Викинги могут тебе только позавидовать!');
+            // Тут можно вернуть состояние с флагом смерти
+        }
 
-                        addLog(`***ТЫ УМЕР В БОЮ*** Викинги могут тебе только позавидовать!`);
-                        personDeath()
-                    }
+        // Проверка смерти врага
+        if (enemy.hpEnemy === 0) {
+            enemy.status = 'Побежденный';
+            events.push(`Враг ${enemy.nameEnemy} побежден!`);
+            if (bonusWin) enemy.bonusWin();
+            if (bonusItem) enemy.bonusItem();
+        }
 
-                    gameState.navigation.hpToSet.textContent = `Здоровье: ${gameState.player.lastValueHp}/${gameState.player.maxHp}`;
-                    addLog(`• Ты получаешь: -${damageToPerson} HP`);
+        return { newState, events };
+    }
 
-                    // Урон по врагу
-                    if ((newValueHpEnemy > 0) && (newValueHpEnemy < arrayOfEnemies[numberEnemy].maxHpEnemy)) {
-                        gameState.player.lastValueHpEnemy = newValueHpEnemy;
+    function renderBattle(newState, events) { // рендер и лог по итогу атаки
+        // Обновляем HP игрока
+        gameState.navigation.hpToSet.textContent = `Здоровье: ${newState.player.lastValueHp}/${newState.player.maxHp}`;
 
-                        addLog(`${arrayOfEnemies[numberEnemy].nameEnemy}. HP: ${gameState.player.lastValueHpEnemy}/${maxHpEnemy} (Враг: -${damageToEnemy} HP)`);
+        // Пишем в лог
+        events.forEach(e => addLog(e));
+    }
 
-                    } else if (newValueHpEnemy >= maxHpEnemy) {
-                        gameState.player.lastValueHpEnemy = maxHpEnemy
-                    } else {
-                        if (damageToEnemy > gameState.player.lastValueHpEnemy) {
-                            damageToEnemy = gameState.player.lastValueHpEnemy
-                        }
+    function clickOnButtonAttack(enemyIndex, bonusWin, bonusItem) {
+        function mouseClickOnButtonAttack() {
+            if (arrayOfEnemies[enemyIndex].isUnderAttack === 1) {
+                const { newState, events } = attackEnemy(enemyIndex, bonusWin, bonusItem);
+                gameState.player = newState.player;
+                renderBattle(newState, events);
 
-                        gameState.player.lastValueHpEnemy = 0;
-                        arrayOfEnemies[numberEnemy].hpEnemy = 0;
-                        arrayOfEnemies[numberEnemy].status = 'Побежденный';
-
-                        addLog(`• Враг - ${arrayOfEnemies[numberEnemy].nameEnemy} побежден! (Враг: -${damageToEnemy} HP)`);
-
-                        arrayOfEnemies[numberEnemy].winText()
-                        if (bonusWin !== 0) {
-                            arrayOfEnemies[numberEnemy].bonusWin()
-                        }
-                        if (bonusItem !== 0) {
-                            arrayOfEnemies[numberEnemy].bonusItem()
-                        }
-                    }
+                if (gameState.player.lastValueHp === 0) {
+                    personDeath();
                 }
             }
         }
+
         gameState.navigation.buttonAttack.removeEventListener('click', mouseClickOnButtonAttack);
         gameState.navigation.buttonAttack.addEventListener('click', mouseClickOnButtonAttack);
     }
@@ -783,36 +793,36 @@ function mainGame() {
     function clickOnButtonChooseItem(itemButton, elementButton, findName) { // кнопки выбора предмета в сумке
         function mouseClickOnButtonChooseItem(event) {
             getNameItem(findName)
+            const itemUsed = gameState.player.gameItemPerson[gameState.player.numberItemInArr];
+            const itemUsedName = itemUsed.itemName;
+            const itemUsedMessage = itemUsed.message;
 
-            addLog(`★ Ты использовал предмет: ${gameState.player.gameItemPerson[gameState.player.numberItemInArr].itemName}. 
-            ${gameState.player.gameItemPerson[gameState.player.numberItemInArr].message} ★`);
-
-            if (gameState.player.gameItemPerson[gameState.player.numberItemInArr].hp) {
-                gameState.player.gameItemPerson[gameState.player.numberItemInArr].hp()
+            if (itemUsed.hp) {
+                itemUsed.hp()
             }
-            if (gameState.player.gameItemPerson[gameState.player.numberItemInArr].strength) {
-                gameState.player.gameItemPerson[gameState.player.numberItemInArr].strength()
+            if (itemUsed.strength) {
+                itemUsed.strength()
             }
-            if (gameState.player.gameItemPerson[gameState.player.numberItemInArr].agility) {
-                gameState.player.gameItemPerson[gameState.player.numberItemInArr].agility()
+            if (itemUsed.agility) {
+                itemUsed.agility()
             }
-            if (gameState.player.gameItemPerson[gameState.player.numberItemInArr].defense) {
-                gameState.player.gameItemPerson[gameState.player.numberItemInArr].defense()
+            if (itemUsed.defense) {
+                itemUsed.defense()
             }
             elementButton.remove()
-            gameState.player.gameItemPerson[gameState.player.numberItemInArr]
             gameState.player.gameItemPerson.splice(gameState.player.numberItemInArr, 1);
 
             createArrNameItem()
+
+            addLog(`★ Ты использовал предмет: ${itemUsedName}. 
+            ${itemUsedMessage} ★`);
 
             let itemText = `Предметы: ${gameState.player.nameItemPerson.join(', ')}`
             if (gameState.player.nameItemPerson.length === 0) {
                 itemText = `Предметы: пусто`
             }
             gameState.navigation.selectionPersonItems.textContent = `${itemText}`;
-
             gameState.navigation.containerWindowUseItem.style.display = "none";
-            createArrNameItem()
         }
 
         itemButton.removeEventListener('click', mouseClickOnButtonChooseItem);
@@ -850,10 +860,10 @@ function mainGame() {
     }
 
     function changeConstantlyStrength(bonusStrength) { //ф-ия меняет постоянное значение силы на заданное кол-во
-        const strengthToChange = document.getElementById('person-strength');
         gameState.player.lastValueStrength = gameState.player.valueStrength + bonusStrength;
         gameState.player.valueStrength = gameState.player.lastValueStrength;
 
+        const strengthToChange = document.getElementById('person-strength');
         strengthToChange.textContent = `Сила: ${gameState.player.lastValueStrength}`;
         setTimeout(() => {
             addLog(`БОНУС: +${bonusStrength} к силе`);
@@ -861,10 +871,10 @@ function mainGame() {
     }
 
     function changeConstantlyAgility(bonusAgility) { //ф-ия меняет постоянное значение ловкости на заданное кол-во
-        const agilityToChange = document.getElementById('person-agility');
         gameState.player.lastValueAgility = gameState.player.valueAgility + bonusAgility;
         gameState.player.valueAgility = gameState.player.lastValueAgility;
 
+        const agilityToChange = document.getElementById('person-agility');
         agilityToChange.textContent = `Ловкость: ${gameState.player.lastValueAgility}`;
         setTimeout(() => {
             if (bonusAgility > 0) {
@@ -876,10 +886,10 @@ function mainGame() {
     }
 
     function changeConstantlyDefense(bonusDefense) { //ф-ия меняет постоянное значение брони на заданное кол-во
-        const defenseToChange = document.getElementById('person-defense');
         gameState.player.lastValueDefense = gameState.player.valueDefense + bonusDefense;
         gameState.player.valueDefense = gameState.player.lastValueDefense;
 
+        const defenseToChange = document.getElementById('person-defense');
         defenseToChange.textContent = `Броня: ${gameState.player.lastValueDefense}`;
         setTimeout(() => {
             addLog(`БОНУС: +${bonusDefense} к броне`);
@@ -935,160 +945,162 @@ function mainGame() {
         }
     }
 
+    function mouseClickOnLocationDitch(event) {
+        startBattle(0, 'Стандарт');
+        renderLocation('Ров', gameState.navigation.locationButtonsHill, 0, 0, 0)
+    }
 
     function clickOnLocationDitch() { // кнопка "Ров"
-        function mouseClickOnLocationDitch(event) {
-            startBattle(0, 'Стандарт');
-
-            renderLocation('Ров', gameState.navigation.locationButtonsHill, 0, 0, 0)
-        }
         gameState.navigation.buttonDitch.removeEventListener('click', mouseClickOnLocationDitch);
         gameState.navigation.buttonDitch.addEventListener('click', mouseClickOnLocationDitch);
     }
     clickOnLocationDitch();
 
-    function clickOnLocationYard() {  // кнопка "Двор"
-        function mouseClickOnLocationYard(event) {
-            startBattle(1, 'Стандарт');
+    function mouseClickOnLocationYard(event) {
+        startBattle(1, 'Стандарт');
+        renderLocation('Двор', gameState.navigation.locationButtonsHill, gameState.navigation.locationButtonsBranchYard, 0, 0)
+    }
 
-            renderLocation('Двор', gameState.navigation.locationButtonsHill, gameState.navigation.locationButtonsBranchYard, 0, 0)
-        }
+    function clickOnLocationYard() {  // кнопка "Двор"
         gameState.navigation.buttonYard.removeEventListener('click', mouseClickOnLocationYard);
         gameState.navigation.buttonYard.addEventListener('click', mouseClickOnLocationYard);
     }
     clickOnLocationYard()
 
-    function clickOnLocationBarn() { // кнопка "Амбар"
-        function mouseClickOnLocationBarn(event) {
-            if (arrayOfEnemies[1].status === 'Побежденный') {
-                startBattle(3, 'Стандарт');
-
-                renderLocation('Амбар', gameState.navigation.locationButtonsBranchYard, 0, 0, 0);
-            } else {
-                addLog(`ЧТОБЫ ПРОЙТИ ДАЛЬШЕ победите врага ${arrayOfEnemies[1].nameEnemy} в локации Двор!`);
-            }
+    function mouseClickOnLocationBarn(event) {
+        if (arrayOfEnemies[1].status === 'Побежденный') {
+            startBattle(3, 'Стандарт');
+            renderLocation('Амбар', gameState.navigation.locationButtonsBranchYard, 0, 0, 0);
+        } else {
+            addLog(`ЧТОБЫ ПРОЙТИ ДАЛЬШЕ победите врага ${arrayOfEnemies[1].nameEnemy} в локации Двор!`);
         }
+    }
+
+    function clickOnLocationBarn() { // кнопка "Амбар"
         gameState.navigation.buttonBarn.removeEventListener('click', mouseClickOnLocationBarn);
         gameState.navigation.buttonBarn.addEventListener('click', mouseClickOnLocationBarn);
     }
     clickOnLocationBarn()
 
-    function clickOnLocationStable() { // кнопка "Конюшня"
-        function mouseClickOnLocationStable (event) {
-            if (arrayOfEnemies[1].status === 'Побежденный') {
-                startBattle(2, 'Стандарт');
+    function mouseClickOnLocationStable(event) {
+        if (arrayOfEnemies[1].status === 'Побежденный') {
+            startBattle(2, 'Стандарт');
+            renderLocation('Конюшня', gameState.navigation.locationButtonsBranchYard, 0, 0, 0);
 
-                renderLocation('Конюшня', gameState.navigation.locationButtonsBranchYard, 0, 0, 0);
-
-            } else {
-                addLog(`ЧТОБЫ ПРОЙТИ ДАЛЬШЕ победите врага ${arrayOfEnemies[1].nameEnemy} в локации Двор!`);
-            }
+        } else {
+            addLog(`ЧТОБЫ ПРОЙТИ ДАЛЬШЕ победите врага ${arrayOfEnemies[1].nameEnemy} в локации Двор!`);
         }
-        
+    }
+
+    function clickOnLocationStable() { // кнопка "Конюшня"
         gameState.navigation.buttonStable.removeEventListener('click', mouseClickOnLocationStable);
         gameState.navigation.buttonStable.addEventListener('click', mouseClickOnLocationStable);
     }
     clickOnLocationStable()
 
+    function mouseClickOnLocationGates(event) {
+        renderLocation('Ворота замка', gameState.navigation.locationButtonsHill, gameState.navigation.locationButtonsGates, 0, 0);
+    }
+
     function clickOnLocationGates() { // кнопка "Ворота замка"
-        function mouseClickOnLocationGates(event) {
-            renderLocation('Ворота замка', gameState.navigation.locationButtonsHill, gameState.navigation.locationButtonsGates, 0, 0);
-        }
         gameState.navigation.buttonGates.removeEventListener('click', mouseClickOnLocationGates);
         gameState.navigation.buttonGates.addEventListener('click', mouseClickOnLocationGates);
     }
     clickOnLocationGates()
 
+    function mouseClickOnLocationDoctor(event) {
+        changeVariableHp(10);
+
+        gameState.navigation.journalEntries.innerHTML = `${gameState.player.randomName}, отдохни немного и залечи свои раны прохладным Элем!`
+
+        renderLocation('Лекарь', gameState.navigation.locationButtonsBranchGates, 0, 0, 0);
+
+        setTimeout(() => {
+            addLog(`+${gameState.player.bonusValue} к здоровью`);
+        }, 1000);
+    }
+
     function clickOnLocationDoctor() { // кнопка "Лекарь"
-        function mouseClickOnLocationDoctor(event) {
-            changeVariableHp(10);
-
-            gameState.navigation.journalEntries.innerHTML = `${gameState.player.randomName}, отдохни немного и залечи свои раны прохладным Элем!`
-
-            renderLocation('Лекарь', gameState.navigation.locationButtonsBranchGates, 0, 0, 0);
-
-            setTimeout(() => {
-                addLog(`+${gameState.player.bonusValue} к здоровью`);
-            }, 1000);
-        }
         gameState.navigation.buttonDoctor.removeEventListener('click', mouseClickOnLocationDoctor);
         gameState.navigation.buttonDoctor.addEventListener('click', mouseClickOnLocationDoctor);
     }
     clickOnLocationDoctor()
 
-    function clickOnLocationWeapons() { // кнопка "Камерная"
-        function mouseClickOnLocationWeapons(event) {
-            startBattle(4, 'Стандарт');
+    function mouseClickOnLocationWeapons(event) {
+        startBattle(4, 'Стандарт');
+        renderLocation('Камерная', gameState.navigation.locationButtonsGates, 0, 0, 0);
+    }
 
-            renderLocation('Камерная', gameState.navigation.locationButtonsGates, 0, 0, 0);
-        }
+    function clickOnLocationWeapons() { // кнопка "Камерная"
         gameState.navigation.buttonWeapons.removeEventListener('click', mouseClickOnLocationWeapons);
         gameState.navigation.buttonWeapons.addEventListener('click', mouseClickOnLocationWeapons);
     }
     clickOnLocationWeapons()
 
-    function clickOnLocationStaircase() { // кнопка "Лестница"
-        function mouseClickOnLocationStaircase(event) {
-            gameState.navigation.journalEntries.innerHTML = `Странно... Лестница совершенно пуста, ни охраны, ни вонючей крысы, что-то тут не так!`
+    function mouseClickOnLocationStaircase(event) {
+        gameState.navigation.journalEntries.innerHTML = `Странно... Лестница совершенно пуста, ни охраны, ни вонючей крысы, что-то тут не так!`
 
-            renderLocation('Лестница', gameState.navigation.locationButtonsGates, gameState.navigation.locationButtonsStaircase, 0, 0);
-        }
+        renderLocation('Лестница', gameState.navigation.locationButtonsGates, gameState.navigation.locationButtonsStaircase, 0, 0);
+    }
+
+    function clickOnLocationStaircase() { // кнопка "Лестница"
         gameState.navigation.buttonStaircase.removeEventListener('click', mouseClickOnLocationStaircase);
         gameState.navigation.buttonStaircase.addEventListener('click', mouseClickOnLocationStaircase);
     }
     clickOnLocationStaircase()
 
-    function clickOnLocationBedroom() { // кнопка "Спальня"
-        function mouseClickOnLocationBedroom(event) {
-            gameState.navigation.journalEntries.innerHTML = `Старый сундук... посмотрим!`;
+    function mouseClickOnLocationBedroom(event) {
+        gameState.navigation.journalEntries.innerHTML = `Старый сундук... посмотрим!`;
+        renderLocation('Спальня', gameState.navigation.locationButtonsStaircase, 0, 0, gameState.navigation.buttonBedroomBox);
+    }
 
-            renderLocation('Спальня', gameState.navigation.locationButtonsStaircase, 0, 0, gameState.navigation.buttonBedroomBox);
-        }
+    function clickOnLocationBedroom() { // кнопка "Спальня"
         gameState.navigation.buttonBedroom.removeEventListener('click', mouseClickOnLocationBedroom);
         gameState.navigation.buttonBedroom.addEventListener('click', mouseClickOnLocationBedroom);
     }
     clickOnLocationBedroom()
 
-    function clickOnLocationBedroomBox() { // кнопка "Сундук" в спальне
-        function mouseClickOnLocationBedroomBox(event) {
-            gameState.navigation.buttonBedroomBox.style.display = 'none';
-            gameState.navigation.journalEntries.innerHTML = `• Награда за смелость...3...2...1...`
+    function mouseClickOnLocationBedroomBox(event) {
+        gameState.navigation.buttonBedroomBox.style.display = 'none';
+        gameState.navigation.journalEntries.innerHTML = `• Награда за смелость...3...2...1...`
 
-            function bonusItem() {
-                const enchantedRobe = document.createElement('button');
-                const idButtonPresent = 'newElementButtonPresentEnchantedRobe';
+        function bonusItem() {
+            const enchantedRobe = document.createElement('button');
+            const idButtonPresent = 'newElementButtonPresentEnchantedRobe';
 
-                getPresentItem(3, enchantedRobe, idButtonPresent);
-                return
-            }
-            bonusItem()
+            getPresentItem(3, enchantedRobe, idButtonPresent);
+            return
         }
+        bonusItem()
+    }
+
+    function clickOnLocationBedroomBox() { // кнопка "Сундук" в спальне
         gameState.navigation.buttonBedroomBox.removeEventListener('click', mouseClickOnLocationBedroomBox, { once: true });
         gameState.navigation.buttonBedroomBox.addEventListener('click', mouseClickOnLocationBedroomBox, { once: true });
     }
     clickOnLocationBedroomBox()
 
-    function clickOnLocationThroneRoom() { // кнопка "Тронный зал"
-        function mouseClickOnLocationThroneRoom(event) {
-            startBattle(5, 'Тронный зал');
+    function mouseClickOnLocationThroneRoom(event) {
+        startBattle(5, 'Тронный зал');
+        renderLocation('Тронный зал', gameState.navigation.locationButtonsStaircase, 0, 0, gameState.navigation.buttonDonjon);
+    }
 
-            renderLocation('Тронный зал', gameState.navigation.locationButtonsStaircase, 0, 0, gameState.navigation.buttonDonjon);
-        }
+    function clickOnLocationThroneRoom() { // кнопка "Тронный зал"
         gameState.navigation.buttonThroneRoom.removeEventListener('click', mouseClickOnLocationThroneRoom);
         gameState.navigation.buttonThroneRoom.addEventListener('click', mouseClickOnLocationThroneRoom);
     }
     clickOnLocationThroneRoom()
 
-    function clickOnLocationDonjon() { // кнопка "Главная башня"
-        function mouseClickOnLocationDonjon(event) {
-            if (arrayOfEnemies[5].status === 'Побежденный') {
-                startBattle(6, 'Главная башня');
-
-                renderLocation('Главная башня', 0, 0, gameState.navigation.buttonDonjon, 0);
-            } else {
-                addLog(`ЧТОБЫ ПРОЙТИ ДАЛЬШЕ победите врага ${arrayOfEnemies[5].nameEnemy} в локации Тронный зал!`);
-            }
+    function mouseClickOnLocationDonjon(event) {
+        if (arrayOfEnemies[5].status === 'Побежденный') {
+            startBattle(6, 'Главная башня');
+            renderLocation('Главная башня', 0, 0, gameState.navigation.buttonDonjon, 0);
+        } else {
+            addLog(`ЧТОБЫ ПРОЙТИ ДАЛЬШЕ победите врага ${arrayOfEnemies[5].nameEnemy} в локации Тронный зал!`);
         }
+    }
+    
+    function clickOnLocationDonjon() { // кнопка "Главная башня"
         gameState.navigation.buttonDonjon.removeEventListener('click', mouseClickOnLocationDonjon);
         gameState.navigation.buttonDonjon.addEventListener('click', mouseClickOnLocationDonjon);
     }
