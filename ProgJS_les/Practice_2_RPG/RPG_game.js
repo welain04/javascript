@@ -265,7 +265,7 @@ function mainGame() {
             maxHpEnemy: 20,
             hpEnemy: 20,
             strengthEnemy: 15,
-            status: 'Непобежденный',
+            status: 'undefeated',
             bonusWin() { return changeConstantlyDefense(1) },
             bonusItem() {
                 const toadPoison = document.createElement('button');
@@ -284,7 +284,7 @@ function mainGame() {
             maxHpEnemy: 40,//40
             hpEnemy: 40,
             strengthEnemy: 15,//15
-            status: 'Непобежденный',
+            status: 'undefeated',
             bonusWin() { return changeConstantlyAgility(3) },
             isUnderAttack: 0,
             winText() {
@@ -297,7 +297,7 @@ function mainGame() {
             maxHpEnemy: 40,
             hpEnemy: 40,
             strengthEnemy: 20,
-            status: 'Непобежденный',
+            status: 'undefeated',
             bonusWin() { return changeConstantlyStrength(5) },
             isUnderAttack: 0,
             winText() {
@@ -310,7 +310,7 @@ function mainGame() {
             maxHpEnemy: 30,
             hpEnemy: 30,
             strengthEnemy: 15,
-            status: 'Непобежденный',
+            status: 'undefeated',
             bonusWin() { return changeConstantlyAgility(2) },
             bonusItem() {
                 const ratTeethBeads = document.createElement('button');
@@ -329,7 +329,7 @@ function mainGame() {
             maxHpEnemy: 70,
             hpEnemy: 70,
             strengthEnemy: 25,
-            status: 'Непобежденный',
+            status: 'undefeated',
             bonusWin() { return changeConstantlyStrength(3) },
             bonusItem() {
                 const poisonedSword = document.createElement('button');
@@ -348,7 +348,7 @@ function mainGame() {
             maxHpEnemy: 7,//70
             hpEnemy: 7,//70
             strengthEnemy: 30,
-            status: 'Непобежденный',
+            status: 'undefeated',
             bonusWin() { return changeConstantlyHp(3) },
             isUnderAttack: 0,
             winText() {
@@ -361,7 +361,7 @@ function mainGame() {
             maxHpEnemy: 12,//120
             hpEnemy: 12,
             strengthEnemy: 20,
-            status: 'Непобежденный',
+            status: 'undefeated',
             bonusWin() { return },
             isUnderAttack: 0,
             winText() {
@@ -468,7 +468,7 @@ function mainGame() {
         onOffButtons(gameState.navigation.locationButtonsBranchYard, 0);
         onOffButtons(gameState.navigation.locationButtonsHill, 1);
         for (obj of arrayOfEnemies) {
-            obj.status = 'Непобежденный';
+            obj.status = 'undefeated';
         }
 
         gameState.player.presentLocation = 'Холм';
@@ -722,13 +722,13 @@ function mainGame() {
 
     function attackEnemy(enemyIndex, bonusWin, bonusItem) { // атака и получение бонусов
         let newState = {}; // копируем, чтобы не мутировать напрямую
-        newState.enemies = { ...arrayOfEnemies };
+        newState.enemies = [ ...arrayOfEnemies ];
         newState.player = { ...gameState.player };
         const events = [];
         const enemy = newState.enemies[enemyIndex];
         const player = newState.player;
 
-        if (enemy.status === 'Побежденный') {
+        if (enemy.status === 'defeated') {
             events.push('Все враги в локации побеждены!');
             return { newState, events };
         }
@@ -756,7 +756,7 @@ function mainGame() {
 
         // Проверка смерти врага
         if (enemy.hpEnemy === 0) {
-            enemy.status = 'Побежденный';
+            enemy.status = 'defeated';
             events.push(`Враг ${enemy.nameEnemy} побежден!`);
             if (bonusWin) enemy.bonusWin();
             if (bonusItem) enemy.bonusItem();
@@ -918,7 +918,7 @@ function mainGame() {
     function startBattle(enemyIndex, messageLocation) {
         setIsUnderAttackNull()
         arrayOfEnemies[enemyIndex].isUnderAttack = 1;
-        if (arrayOfEnemies[enemyIndex].status === 'Непобежденный') {
+        if (arrayOfEnemies[enemyIndex].status === 'undefeated') {
             gameState.player.lastValueHpEnemy = arrayOfEnemies[enemyIndex].hpEnemy;
             arrayOfEnemies[enemyIndex].attack;
             switch (messageLocation) {
@@ -968,7 +968,7 @@ function mainGame() {
     clickOnLocationYard()
 
     function mouseClickOnLocationBarn(event) {
-        if (arrayOfEnemies[1].status === 'Побежденный') {
+        if (arrayOfEnemies[1].status === 'defeated') {
             startBattle(3, 'Стандарт');
             renderLocation('Амбар', gameState.navigation.locationButtonsBranchYard, 0, 0, 0);
         } else {
@@ -983,7 +983,7 @@ function mainGame() {
     clickOnLocationBarn()
 
     function mouseClickOnLocationStable(event) {
-        if (arrayOfEnemies[1].status === 'Побежденный') {
+        if (arrayOfEnemies[1].status === 'defeated') {
             startBattle(2, 'Стандарт');
             renderLocation('Конюшня', gameState.navigation.locationButtonsBranchYard, 0, 0, 0);
 
@@ -1092,7 +1092,7 @@ function mainGame() {
     clickOnLocationThroneRoom()
 
     function mouseClickOnLocationDonjon(event) {
-        if (arrayOfEnemies[5].status === 'Побежденный') {
+        if (arrayOfEnemies[5].status === 'defeated') {
             startBattle(6, 'Главная башня');
             renderLocation('Главная башня', 0, 0, gameState.navigation.buttonDonjon, 0);
         } else {
