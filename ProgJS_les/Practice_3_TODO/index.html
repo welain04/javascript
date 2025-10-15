@@ -10,28 +10,41 @@
 
 <body>
     <main>
-        <!-- <div id="container-window-set-notification" class="container-window container-window-set-notification">
+        <div id="container-window-set-notification" class="container-window container-window-set-notification">
             <div class="window-set-notification">
-                <div class="title">Настроить уведомление</div>
-                <div id="button-place-set-notification" class="button-place-set-notification"></div>
-                <button id="button button-set-notification" class="button button-set-notification">
-                    Установить
-                </button>
-                <button id="button button-exit-from-set-notification" class="button button-exit-from-set-notification">
-                    Выйти
-                </button>
+                <div class="title">Установить уведомление на:</div>
+                <div id="set-time-notification" class="set-time-notification">
+                    <button id="button-minus-sec" class="button button-minus-sec">-
+                    </button>
+                    <div id="time-notification" class="time-notification"> 5 сек
+                    </div>
+                    <button id="button-plus-sec" class="button button-plus-sec">+
+                    </button>
+                </div>
+                <div id="button-place-set-notification" class="button-place-set-notification">
+                    <button id="button-set-notification" class="button button-set-notification">
+                        Установить
+                    </button>
+                    <button id="button-exit-from-set-notification" class="button button-exit-from-set-notification">
+                        Выйти
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div id="container-window-get-notification" class="container-window container-window-get-notification">
-            <div class="window-get-notification">
-                <div class="title">Настроить уведомление</div>
-                <div id="button-place-set-notification" class="button-place-set-notification"></div>
-                <button id="button button-exit-from-get-notification" class="button button-exit-from-get-notification">
-                    Спасибо
-                </button>
+        <div id="container-window-disable-notification" class="container-window container-window-disable-notification">
+            <div class="window-disable-notification">
+                <div class="title">Отключить уведомление?</div>
+                <div id="button-place-disable-notification" class="button-place-disable-notification">
+                    <button id="button-disable-notification-yes" class="button button-disable-notification-yes">
+                        Да
+                    </button>
+                    <button id="button-disable-notification-no" class="button button-disable-notification-no">
+                        Нет
+                    </button>
+                </div>
             </div>
-        </div> -->
+        </div>
 
         <div class="todo-list">
             <div class="title">
@@ -42,72 +55,13 @@
 
             <div class="todo-list-area-add-task">
                 <div class="add-task">
-                    <input class="add-text-task" type="text" placeholder="Добавить задачу">
-                    <button class="button button-add-task">Добавить задачу</button>
+                    <input id="input-add-text-task" class="add-text-task" type="text" placeholder="Добавить задачу">
+                    <button id="button-add-task" class="button button-add-task">Добавить задачу</button>
                 </div>
             </div>
 
             <div class="list-of-tasks">
-                <div class="tasks">
-                    <div class="container-task">
-                        <div class="task">
-                            <div class="task-content">
-                                <div class="task-text-and-checkbox">
-                                    <input id="task-checkbox1" class="task-checkbox" type="checkbox">
-                                    <label for="task-checkbox1" class="task-body">Задача 1</label>
-                                </div>
-                                <div class="notification">
-                                    <img class="notification-icon" src="icon/notification_icon.png" alt="Уведомление">
-                                </div>
-                            </div>
-                            <button class="button button-delete-task"> Удалить </button>
-                        </div>
-                    </div>
-
-                    <div class="container-task">
-                        <div class="task">
-                            <div class="task-content">
-                                <div class="task-text-and-checkbox">
-                                    <input id="task-checkbox2" class="task-checkbox" type="checkbox">
-                                    <label for="task-checkbox2" class="task-body">Задача 2</label>
-                                </div>
-                                <div class="notification">
-                                    <img class="notification-icon" src="icon/notification_icon.png" alt="Уведомление">
-                                </div>
-                            </div>
-                            <button class="button button-delete-task"> Удалить </button>
-                        </div>
-                    </div>
-
-                    <div class="container-task">
-                        <div class="task">
-                            <div class="task-content">
-                                <div class="task-text-and-checkbox">
-                                    <input id="task-checkbox3" class="task-checkbox" type="checkbox">
-                                    <label for="task-checkbox3" class="task-body">Задача 3</label>
-                                </div>
-                                <div class="notification">
-                                    <img class="notification-icon" src="icon/notification_icon.png" alt="Уведомление">
-                                </div>
-                            </div>
-                            <button class="button button-delete-task"> Удалить </button>
-                        </div>
-                    </div>
-
-                    <div class="container-task">
-                        <div class="task">
-                            <div class="task-content">
-                                <div class="task-text-and-checkbox">
-                                    <input id="task-checkbox4" class="task-checkbox" type="checkbox">
-                                    <label for="task-checkbox4" class="task-body">Задача 4</label>
-                                </div>
-                                <div class="notification">
-                                    <img class="notification-icon" src="icon/notification_icon.png" alt="Уведомление">
-                                </div>
-                            </div>
-                            <button class="button button-delete-task"> Удалить </button>
-                        </div>
-                    </div>
+                <div id="tasks" class="tasks">
                 </div>
 
                 <div class="buttons-filter">
@@ -118,8 +72,6 @@
                         Невыполненные задачи </button>
                 </div>
             </div>
-
-        </div>
     </main>
 
     <script src="TO-DO_list.js"></script>
