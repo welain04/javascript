@@ -286,7 +286,6 @@ main {
     background-color: rgba(253, 228, 228, 0.189);
 }
 
-
 .todo-list .list-of-tasks .tasks .container-task .task:has(.task-checkbox:hover) {
     background-color: rgba(246, 233, 233, 0.699);
 }

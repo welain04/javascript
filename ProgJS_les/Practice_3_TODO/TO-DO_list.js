@@ -1,7 +1,6 @@
 // НЕДОРАБОТКИ
 
 // Сохранение задач в localStorage (+счетчика id)
-// запрос к API, получение списка от него и показывание этих задач
 
 
 //БАГИ:
@@ -13,6 +12,7 @@
 
 
 //ВОЗМОЖНЫЕ ДОРАБОТКИ:
+// в уведомлении писать какую конкретно задачу надо выполнить
 // setTaskBody пока не используется, поменять задачу нельзя
 // когда все задачи удалены (нет задач) - скрываются кнопки фильтра и выводится текст "Нет активных задач, можно отдохнуть"
 // Модальное окно с сообщением об окончании таймера
@@ -23,10 +23,10 @@ class Task {
     timeoutId = null;
     timerOn = false;
 
-    constructor(taskBody, taskId, status = 'unfulfilled') {
+    constructor(taskBody, taskId, completed = false) {
         this.taskBody = taskBody;
         this.taskId = taskId;
-        this.status = status;
+        this.completed = completed;
     }
 
     getTaskId() {
@@ -45,14 +45,21 @@ class Task {
     }
 
     getStatus() {
-        return this.status;
+        return this.completed;
     }
     setStatus(value) {
-        if (value === 'unfulfilled' || value === 'fulfilled') {
-            this.status = value;
+        if (value === false || value === true) {
+            this.completed = value;
         } else {
             console.log('Некорректный статус объекта')
         }
+        applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage.forEach((elem) => {
+            if (elem.id === this.taskId) {
+                elem.completed = this.completed;
+                return
+            }
+        })
+        localStorage.setItem('user', JSON.stringify(applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage));
     }
 
     addTaskInTheList() { // создаем задачу в html
@@ -65,7 +72,7 @@ class Task {
                                     <input id="task-checkbox${this.taskId}" class="task-checkbox" type="checkbox">
                                     <label for="task-checkbox${this.taskId}" class="task-body">${this.taskBody}</label>
                                 </div>
-                                <div class="notification">
+                                <div class="notification" id="notification${this.taskId}">
                                     <button id="button-notification${this.taskId}" class="button-notification">
                                         <img class="notification-icon" src="icon/notification_icon.png"
                                             alt="Уведомление">
@@ -81,9 +88,33 @@ class Task {
         taskHtml.remove();
     }
 
+    addTaskToArrForLocalStorage() {
+        const taskToStorage = {}
+        taskToStorage.id = this.taskId;
+        taskToStorage.title = this.taskBody;
+        if (this.completed === true) {
+            taskToStorage.completed = true
+        } else {
+            taskToStorage.completed = false
+        }
+
+        applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage.push(taskToStorage);
+        localStorage.setItem('user', JSON.stringify(applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage));
+
+    }
+    deleteTaskToArrForLocalStorage() {
+        applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage.forEach((elem, index) => {
+            if (applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage[index].id === this.taskId) {
+                applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage.splice(index, 1);
+                return
+            }
+        })
+        localStorage.setItem('user', JSON.stringify(applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage));
+    }
+
     setNotification(notification) {
         this.timerOn = true;
-        this.timeoutId = setTimeout(() => { 
+        this.timeoutId = setTimeout(() => {
             alert('Пора выполнить задачу');
             this.timerOn = false;
         }, notification * 1000)
@@ -96,8 +127,13 @@ class Task {
 
 class TasksList {
     recordsTasks = [];
+    arrForLocalStorage = [];
     addRecord(task) {
         this.recordsTasks.push(task)
+    }
+    
+    addarrForLocalStorage(task) {
+        this.arrForLocalStorage.push(task)
     }
 }
 
@@ -106,11 +142,13 @@ const applicationState = { // глобальные переменные
     globalVariables: {
         arrRecordsTasks: new TasksList,
         activeTaskId: null,
-        activeTaskIndex: null
+        activeTaskIndex: null,
+        dataFromTheServer: []
+        // arrForLocalStorage: new Array()
     },
 
     counters: {
-        valueCounterTaskId: 25300,
+        valueCounterTaskId: 0,
         timeCounter: 5
     },
     counterTaskId() {
@@ -194,7 +232,10 @@ function clickOnButtonAddTask() {
     applicationState.counterTaskId();
     const task = new Task(taskText, applicationState.counters.valueCounterTaskId);
     applicationState.globalVariables.arrRecordsTasks.addRecord(task);
-    task.addTaskInTheList()
+    task.addTaskInTheList();
+    
+    task.addTaskToArrForLocalStorage()
+    //  console.log(applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage)
     applicationState.navigation.inputAddTextTask.value = ''; // чистим поле ввода
 }
 
@@ -205,9 +246,11 @@ function checkCheckbox() {
     findActiveTaskInArr()
 
     if (this.checked) {
-        applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].setStatus('fulfilled');
+        applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].setStatus(true);
+        document.getElementById(`notification${applicationState.globalVariables.activeTaskId}`).style.display = 'none'
     } else {
-        applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].setStatus('unfulfilled');
+        applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].setStatus(false);
+        document.getElementById(`notification${applicationState.globalVariables.activeTaskId}`).style.display = 'flex'
     }
 }
 
@@ -221,8 +264,9 @@ function changeActiveCheckbox() {
 
 function deleteActiveTask() {// удаляем задачу
     findActiveTaskInArr();
-    applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].deleteTaskInTheList() // удаляем html задачи
-    applicationState.globalVariables.arrRecordsTasks.recordsTasks.splice(applicationState.globalVariables.activeTaskIndex, 1) // удаляет задачу из массива
+    applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].deleteTaskInTheList(); // удаляем html задачи
+    applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].deleteTaskToArrForLocalStorage();
+    applicationState.globalVariables.arrRecordsTasks.recordsTasks.splice(applicationState.globalVariables.activeTaskIndex, 1); // удаляет задачу из массива
 }
 
 function buttonNotificationActiveTask() {// настройка уведомлений
@@ -261,7 +305,7 @@ function clickOnButtonShowFulfilledTasks() {// кнопка "выполненн�
     onOffTasks(false, true);//скрываем все контейнеры с тасками  
 
     adressArrTasks.recordsTasks.forEach((elem, index) => {
-        if (adressArrTasks.recordsTasks[index].getStatus() === 'fulfilled') {
+        if (adressArrTasks.recordsTasks[index].getStatus() === true) {
             let fulfilledTaskId = adressArrTasks.recordsTasks[index].getTaskId();
             let fulfilledTask = document.getElementById(`container-task${fulfilledTaskId}`);
             fulfilledTask.style.display = "flex";
@@ -278,7 +322,7 @@ function clickOnButtonShowUnfulfilledTasks() {// кнопка "НЕвыполн�
     onOffTasks(false, true);//скрываем все контейнеры с тасками  
 
     adressArrTasks.recordsTasks.forEach((elem, index) => {
-        if (adressArrTasks.recordsTasks[index].getStatus() === 'unfulfilled') {
+        if (adressArrTasks.recordsTasks[index].getStatus() === false) {
             let fulfilledTaskId = adressArrTasks.recordsTasks[index].getTaskId();
             let fulfilledTask = document.getElementById(`container-task${fulfilledTaskId}`);
             fulfilledTask.style.display = "flex";
@@ -356,3 +400,88 @@ applicationState.navigation.buttonDisableNotificationNo.removeEventListener('cli
 applicationState.navigation.buttonDisableNotificationNo.addEventListener('click', clickOnButtonDisableNotificationNo);
 
 
+// function settingTaskList(data) { // создание задач из загруженых данных
+//     data.forEach((elem, index) => {
+//         const taskText = elem.title;
+//         applicationState.counterTaskId();
+//         const task = new Task(taskText, applicationState.counters.valueCounterTaskId);
+//         applicationState.globalVariables.arrRecordsTasks.addRecord(task);
+//         task.addTaskInTheList();
+//         task.addTaskToArrForLocalStorage()
+//         if (elem.completed === true) {
+//             task.setStatus(true);
+//             document.getElementById(`task-checkbox${applicationState.counters.valueCounterTaskId}`).checked = true;
+//             document.getElementById(`notification${applicationState.counters.valueCounterTaskId}`).style.display = 'none'
+//         }
+//     })
+// }
+
+
+
+function settingTaskList(data, save = false) { // создание задач из загруженых данных
+    data.forEach((elem) => {
+        if (elem.id > applicationState.counters.valueCounterTaskId) {
+            applicationState.counters.valueCounterTaskId = elem.id
+        }
+        const task = new Task(elem.title, elem.id);
+        applicationState.globalVariables.arrRecordsTasks.addRecord(task);
+        task.addTaskInTheList()
+        task.setStatus(elem.completed);
+        if (elem.completed === true) {
+            document.getElementById(`task-checkbox${applicationState.counters.valueCounterTaskId}`).checked = true;
+            document.getElementById(`notification${applicationState.counters.valueCounterTaskId}`).style.display = 'none'
+        }
+        if (save === true) {
+            task.addTaskToArrForLocalStorage()
+        }
+    })
+}
+
+function loadingTaskListFromTheServer() { // !!!ИСКУСТВЕННО ОГРАНИЧЕНО КОЛИЧЕСТВО ЗАГРУЖАЕМЫХ ЗАДАЧ ДО 4 шт.!!!
+    fetch('https://jsonplaceholder.typicode.com/todos')
+        .then(response => response.json())
+        .then(data => {
+            applicationState.globalVariables.dataFromTheServer = data.slice(0, 4);
+            settingTaskList(applicationState.globalVariables.dataFromTheServer, true);
+        })
+        .catch(error => console.error('Ошибка загрузки списка задач:', error));
+}
+// loadingTaskListFromTheServer()
+
+
+
+
+// создаем массив applicationState.globalVariables.arrForLocalStorage с объектами в которых id, title, completed
+
+
+// при создании задачи она должна добавиться в массив и обновлять локалсторадж
+// при удалении удалять задачу из массива и обновлять локал сторадж
+
+// получение данных: раз в сессию мы если в сторадж ничего, то берем с сервера
+
+
+// массив преобразуем в строку и добавляем в локалсторадж
+
+
+// сбор данных из сторадж 
+function readUserFromLocalStorage() {
+    const userJSON = localStorage.getItem('user')
+    if (userJSON === null) {
+        loadingTaskListFromTheServer()
+    } else {
+        settingTaskList(JSON.parse(userJSON));
+    }
+
+    // try { // Если вдруг в хранилище оказался невалидный JSON,предохраняемся от этого
+    //     settingTaskList(JSON.parse(userJSON));
+    // } catch (error) {
+    //     localStorage.removeItem('user')
+    //     return console.error('Ошибка - невалидный JSON:', error)
+    // }
+}
+console.log(applicationState.globalVariables.arrRecordsTasks.recordsTasks)
+
+console.log(applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage)
+console.log(localStorage.getItem('user'))
+readUserFromLocalStorage()
+// localStorage.removeItem('user')
