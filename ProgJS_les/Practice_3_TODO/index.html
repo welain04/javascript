@@ -6,33 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TO-DO List</title>
     <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
 </head>
 
 <body>
     <main>
         <div id="container-window-set-notification" class="container-window container-window-set-notification">
-            <div class="window-set-notification">
-                <div class="title">Установить уведомление на:</div>
-                <div id="set-time-notification" class="set-time-notification">
-                    <button id="button-minus-sec" class="button button-minus-sec">-
-                    </button>
-                    <div id="time-notification" class="time-notification"> 5 сек
+            <div class="border-window">
+                <div class="window-set-notification">
+                    <div class="title">Установить уведомление на:</div>
+                    <div id="set-time-notification" class="set-time-notification">
+                        <button id="button-minus-sec" class="button button-minus-sec">-
+                        </button>
+                        <div id="time-notification" class="time-notification"> 5 сек
+                        </div>
+                        <button id="button-plus-sec" class="button button-plus-sec">+
+                        </button>
                     </div>
-                    <button id="button-plus-sec" class="button button-plus-sec">+
-                    </button>
-                </div>
-                <div id="button-place-set-notification" class="button-place-set-notification">
-                    <button id="button-set-notification" class="button button-set-notification">
-                        Установить
-                    </button>
-                    <button id="button-exit-from-set-notification" class="button button-exit-from-set-notification">
-                        Выйти
-                    </button>
+                    <div id="button-place-set-notification" class="button-place-set-notification">
+                        <button id="button-set-notification" class="button button-set-notification">
+                            Установить
+                        </button>
+                        <button id="button-exit-from-set-notification" class="button button-exit-from-set-notification">
+                            Выйти
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="container-window-disable-notification" class="container-window container-window-disable-notification">
+            <div class="border-window"> 
             <div class="window-disable-notification">
                 <div class="title">Отключить уведомление?</div>
                 <div id="button-place-disable-notification" class="button-place-disable-notification">
@@ -43,6 +53,7 @@
                         Нет
                     </button>
                 </div>
+            </div>
             </div>
         </div>
 

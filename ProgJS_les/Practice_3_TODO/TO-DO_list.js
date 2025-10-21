@@ -1,22 +1,7 @@
-// НЕДОРАБОТКИ
-
-// Сохранение задач в localStorage (+счетчика id)
-
-
-//БАГИ:
-
-//НЕ ЗАБЫТЬ:
-// localStorage должно передаваться значение applicationState.counters.valueCounterTaskId
-// Удалить всратые комменты
-// рендеринг
-
-
 //ВОЗМОЖНЫЕ ДОРАБОТКИ:
-// в уведомлении писать какую конкретно задачу надо выполнить
-// setTaskBody пока не используется, поменять задачу нельзя
+// setTaskBody пока не используется, нет функции изменения задачи
 // когда все задачи удалены (нет задач) - скрываются кнопки фильтра и выводится текст "Нет активных задач, можно отдохнуть"
 // Модальное окно с сообщением об окончании таймера
-// Когда задача выполнена - кнопка уведомления скрывается
 
 
 class Task {
@@ -36,13 +21,13 @@ class Task {
     getTaskBody() {
         return this.taskBody;
     }
-    setTaskBody(value) {
-        if (!validationInputText()) {
-            this.taskBody = taskBody;
-        } else {
-            this.taskBody = value;
-        }
-    }
+    // setTaskBody(value) {
+    //     if (!validationInputText()) {
+    //         this.taskBody = taskBody;
+    //     } else {
+    //         this.taskBody = value;
+    //     }
+    // }
 
     getStatus() {
         return this.completed;
@@ -115,7 +100,7 @@ class Task {
     setNotification(notification) {
         this.timerOn = true;
         this.timeoutId = setTimeout(() => {
-            alert('Пора выполнить задачу');
+            alert(`Пора выполнить задачу: "${this.taskBody}"`);
             this.timerOn = false;
         }, notification * 1000)
     }
@@ -129,11 +114,7 @@ class TasksList {
     recordsTasks = [];
     arrForLocalStorage = [];
     addRecord(task) {
-        this.recordsTasks.push(task)
-    }
-    
-    addarrForLocalStorage(task) {
-        this.arrForLocalStorage.push(task)
+        this.recordsTasks.push(task);
     }
 }
 
@@ -144,7 +125,6 @@ const applicationState = { // глобальные переменные
         activeTaskId: null,
         activeTaskIndex: null,
         dataFromTheServer: []
-        // arrForLocalStorage: new Array()
     },
 
     counters: {
@@ -175,7 +155,6 @@ const applicationState = { // глобальные переменные
         containerWindowDisableNotification: document.getElementById('container-window-disable-notification'),
         buttonDisableNotificationYes: document.getElementById('button-disable-notification-yes'),
         buttonDisableNotificationNo: document.getElementById('button-disable-notification-no'),
-
 
         containerTaskClassName: document.getElementsByClassName('container-task'),
     }
@@ -232,10 +211,8 @@ function clickOnButtonAddTask() {
     applicationState.counterTaskId();
     const task = new Task(taskText, applicationState.counters.valueCounterTaskId);
     applicationState.globalVariables.arrRecordsTasks.addRecord(task);
-    task.addTaskInTheList();
-    
     task.addTaskToArrForLocalStorage()
-    //  console.log(applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage)
+    task.addTaskInTheList();
     applicationState.navigation.inputAddTextTask.value = ''; // чистим поле ввода
 }
 
@@ -333,7 +310,7 @@ function clickOnButtonShowUnfulfilledTasks() {// кнопка "НЕвыполн�
 applicationState.navigation.buttonShowUnfulfilledTasks.removeEventListener('click', clickOnButtonShowUnfulfilledTasks);
 applicationState.navigation.buttonShowUnfulfilledTasks.addEventListener('click', clickOnButtonShowUnfulfilledTasks);
 
-function clickOnButtonShowAllTasks() {// кнопка "НЕвыполненные задачи"
+function clickOnButtonShowAllTasks() {// кнопка "Все задачи"
     onOffTasks(true, false);//высвечиваем все контейнеры с тасками  
 }
 
@@ -400,39 +377,19 @@ applicationState.navigation.buttonDisableNotificationNo.removeEventListener('cli
 applicationState.navigation.buttonDisableNotificationNo.addEventListener('click', clickOnButtonDisableNotificationNo);
 
 
-// function settingTaskList(data) { // создание задач из загруженых данных
-//     data.forEach((elem, index) => {
-//         const taskText = elem.title;
-//         applicationState.counterTaskId();
-//         const task = new Task(taskText, applicationState.counters.valueCounterTaskId);
-//         applicationState.globalVariables.arrRecordsTasks.addRecord(task);
-//         task.addTaskInTheList();
-//         task.addTaskToArrForLocalStorage()
-//         if (elem.completed === true) {
-//             task.setStatus(true);
-//             document.getElementById(`task-checkbox${applicationState.counters.valueCounterTaskId}`).checked = true;
-//             document.getElementById(`notification${applicationState.counters.valueCounterTaskId}`).style.display = 'none'
-//         }
-//     })
-// }
-
-
-
-function settingTaskList(data, save = false) { // создание задач из загруженых данных
+function settingTaskList(data) { // создание задач из загруженых данных
     data.forEach((elem) => {
         if (elem.id > applicationState.counters.valueCounterTaskId) {
             applicationState.counters.valueCounterTaskId = elem.id
         }
         const task = new Task(elem.title, elem.id);
         applicationState.globalVariables.arrRecordsTasks.addRecord(task);
+        task.addTaskToArrForLocalStorage()
         task.addTaskInTheList()
         task.setStatus(elem.completed);
         if (elem.completed === true) {
             document.getElementById(`task-checkbox${applicationState.counters.valueCounterTaskId}`).checked = true;
             document.getElementById(`notification${applicationState.counters.valueCounterTaskId}`).style.display = 'none'
-        }
-        if (save === true) {
-            task.addTaskToArrForLocalStorage()
         }
     })
 }
@@ -442,28 +399,12 @@ function loadingTaskListFromTheServer() { // !!!ИСКУСТВЕННО ОГРА�
         .then(response => response.json())
         .then(data => {
             applicationState.globalVariables.dataFromTheServer = data.slice(0, 4);
-            settingTaskList(applicationState.globalVariables.dataFromTheServer, true);
+            settingTaskList(applicationState.globalVariables.dataFromTheServer);
         })
         .catch(error => console.error('Ошибка загрузки списка задач:', error));
 }
-// loadingTaskListFromTheServer()
 
-
-
-
-// создаем массив applicationState.globalVariables.arrForLocalStorage с объектами в которых id, title, completed
-
-
-// при создании задачи она должна добавиться в массив и обновлять локалсторадж
-// при удалении удалять задачу из массива и обновлять локал сторадж
-
-// получение данных: раз в сессию мы если в сторадж ничего, то берем с сервера
-
-
-// массив преобразуем в строку и добавляем в локалсторадж
-
-
-// сбор данных из сторадж 
+// сбор данных из локалсторадж или сервера 
 function readUserFromLocalStorage() {
     const userJSON = localStorage.getItem('user')
     if (userJSON === null) {
@@ -471,17 +412,7 @@ function readUserFromLocalStorage() {
     } else {
         settingTaskList(JSON.parse(userJSON));
     }
-
-    // try { // Если вдруг в хранилище оказался невалидный JSON,предохраняемся от этого
-    //     settingTaskList(JSON.parse(userJSON));
-    // } catch (error) {
-    //     localStorage.removeItem('user')
-    //     return console.error('Ошибка - невалидный JSON:', error)
-    // }
 }
-console.log(applicationState.globalVariables.arrRecordsTasks.recordsTasks)
 
-console.log(applicationState.globalVariables.arrRecordsTasks.arrForLocalStorage)
-console.log(localStorage.getItem('user'))
-readUserFromLocalStorage()
+readUserFromLocalStorage();
 // localStorage.removeItem('user')
