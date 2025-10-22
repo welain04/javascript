@@ -224,10 +224,8 @@ function checkCheckbox() {
 
     if (this.checked) {
         applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].setStatus(true);
-        document.getElementById(`notification${applicationState.globalVariables.activeTaskId}`).style.display = 'none'
     } else {
         applicationState.globalVariables.arrRecordsTasks.recordsTasks[applicationState.globalVariables.activeTaskIndex].setStatus(false);
-        document.getElementById(`notification${applicationState.globalVariables.activeTaskId}`).style.display = 'flex'
     }
 }
 
@@ -389,7 +387,6 @@ function settingTaskList(data) { // создание задач из загру�
         task.setStatus(elem.completed);
         if (elem.completed === true) {
             document.getElementById(`task-checkbox${applicationState.counters.valueCounterTaskId}`).checked = true;
-            document.getElementById(`notification${applicationState.counters.valueCounterTaskId}`).style.display = 'none'
         }
     })
 }
